@@ -1,13 +1,12 @@
 import _ from 'lodash'
 
-
 export const CURRENCY_CRYPTO = 'CURRENCY_CRYPTO'
 export const CURRENCY_BASE = 'CURRENCY_BASE'
 export const CURRENCY_STABLE = 'CURRENCY_STABLE'
 export const CURRENCY_USD = 'CURRENCY_USD'
 
-
-export const formatValue = (token, otherValue) => {
+// eslint-disable-next-line consistent-return
+export function formatValue(token, otherValue) {
   // See also `./format.test.js`
 
   //console.log('formatValue()', token, otherValue)
@@ -35,8 +34,8 @@ export const formatValue = (token, otherValue) => {
 
   // Small values
   // $0.004 -> 0.004 (not 0.00)
-  const valueString = '' + value
-  const [part1, /*part2*/] = valueString.split('.')
+  const valueString = String(value)
+  const [part1/*, part2*/] = valueString.split('.')
   //console.log('USD < 0.01', part1, +part1, part2, +part2)
   if (+part1 === 0 && value < 0.01) {
     decimalsToRound = 6
@@ -49,7 +48,7 @@ export const formatValue = (token, otherValue) => {
   }
 
   // Special cases
-  if (isNaN(value) || value === null) {
+  if (Number.isNaN(value) || value === null) {
     return ''
   }
 
@@ -64,23 +63,25 @@ export const formatValue = (token, otherValue) => {
     return '-∞'
   }
 
+  if (typeof value === 'undefined') {
+    return ''
+  }
+
   //console.log(value, token?.data?.symbol, `[${decimalsToRound}]`)
 
   // Round & remove zeroes
-  if (typeof value !== 'undefined') {
-    const rounded = _.round(value, decimalsToRound)
-    const withTrailingZeros_String = '' + rounded.toFixed(decimalsToRound)
-    const [part1, part2] = withTrailingZeros_String.split('.')
-    let part2_ = part2
-    if (part2.length > 2) {
-      while (part2_[part2_.length - 1] === '0' && part2_.length > 2) {
-        part2_ = part2_.substr(0, part2_.length - 1)
-      }
+  const rounded = _.round(value, decimalsToRound)
+  const withTrailingZerosString = String(rounded.toFixed(decimalsToRound))
+  const [integerPart, decimalPart] = withTrailingZerosString.split('.')
+  let dp = decimalPart
+  if (decimalPart.length > 2) {
+    while (dp[dp.length - 1] === '0' && dp.length > 2) {
+      dp = dp.substr(0, dp.length - 1)
     }
-    return `${part1}.${part2_}`
   }
+  return `${integerPart}.${dp}`
 }
 
-export const formatAddress = (address) => {
+export const formatAddress = address => {
   return `${address.slice(0, 6)}...${address.slice(address.length - 4)}`
 }
