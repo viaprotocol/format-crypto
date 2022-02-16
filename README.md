@@ -92,15 +92,15 @@ $0.9999999 -> ?
 
 ### Big values
 ```
-[40] 10 ETH -> 10.00 ETH
-[41] 10.1234567890 ETH -> 10.12 ETH
-[42] 10 DAI -> 10.00 DAI
-[43] 10.1234567890 DAI -> 10.12 DAI
+[40] 10 ETH -> 10.00
+[41] 10.1234567890 ETH -> 10.12
+[42] 10 DAI -> 10.00
+[43] 10.1234567890 DAI -> 10.12
 ```
 
 ### Special cases
 ```
-[44] undefined ETH -> undefined
+[44] undefined ETH -> ''
 [45] Infinity ETH -> ∞
 [46] -Infinity ETH -> -∞
 [47] NaN -> ''
