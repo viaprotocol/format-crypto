@@ -137,10 +137,10 @@ describe('formatValue', () => {
     expect(formatValue(ETH, undefined)).toBe('')
   })
   test('[45] Infinity ETH -> ∞', () => {
-    expect(formatValue(ETH, 1/0)).toBe('∞')
+    expect(formatValue(ETH, 1 / 0)).toBe('∞')
   })
   test('[46] -Infinity ETH -> -∞', () => {
-    expect(formatValue(ETH, -1/0)).toBe('-∞')
+    expect(formatValue(ETH, -1 / 0)).toBe('-∞')
   })
   test('[47] NaN -> \'\'', () => {
     expect(formatValue(ETH, NaN)).toBe('')
