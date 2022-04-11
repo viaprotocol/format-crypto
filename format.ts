@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { round } from 'lodash-es'
 
 export const CURRENCY_CRYPTO = 'CURRENCY_CRYPTO'
 export const CURRENCY_BASE = 'CURRENCY_BASE'
@@ -16,16 +16,16 @@ export function formatValue(token, otherValue) {
 
   let decimalsToRound
   switch (token) {
-    case (CURRENCY_CRYPTO):
+    case CURRENCY_CRYPTO:
       decimalsToRound = 6
       break
-    case (CURRENCY_BASE):
+    case CURRENCY_BASE:
       decimalsToRound = 6
       break
-    case (CURRENCY_STABLE):
+    case CURRENCY_STABLE:
       decimalsToRound = 2
       break
-    case (CURRENCY_USD):
+    case CURRENCY_USD:
       decimalsToRound = 2
       break
     default:
@@ -35,7 +35,7 @@ export function formatValue(token, otherValue) {
   // Small values
   // $0.004 -> 0.004 (not 0.00)
   const valueString = String(value)
-  const [part1/*, part2*/] = valueString.split('.')
+  const [part1 /*, part2*/] = valueString.split('.')
   //console.log('USD < 0.01', part1, +part1, part2, +part2)
   if (+part1 === 0 && value < 0.01) {
     decimalsToRound = 6
@@ -70,7 +70,7 @@ export function formatValue(token, otherValue) {
   //console.log(value, token?.data?.symbol, `[${decimalsToRound}]`)
 
   // Round & remove zeroes
-  const rounded = _.round(value, decimalsToRound)
+  const rounded = round(value, decimalsToRound)
   const withTrailingZerosString = String(rounded.toFixed(decimalsToRound))
   const [integerPart, decimalPart] = withTrailingZerosString.split('.')
   let dp = decimalPart
