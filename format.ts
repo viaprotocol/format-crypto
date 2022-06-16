@@ -41,6 +41,11 @@ export function formatValue(token, otherValue) {
     decimalsToRound = 6
   }
 
+  // Smaller-than-min values
+  if (value > 0 && value < 0.000001) {
+    return '0.000001'
+  }
+
   // Big values
   // 10.1234567890 ETH -> 10.12 ETH
   if (+part1 >= 10) {

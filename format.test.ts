@@ -4,6 +4,7 @@ const DAI = { data: { symbol: 'DAI', isStable: true } }
 const ETH = { data: { symbol: 'ETH', isStable: false } }
 
 describe('formatValue', () => {
+  // Stables -> 2f
   test('[01] 1.000000000000000000 DAI -> 1.00', () => {
     expect(formatValue(DAI, '1.000000000000000000')).toBe('1.00')
   })
@@ -49,6 +50,8 @@ describe('formatValue', () => {
   test('[15] 99.9999 DAI -> 100.00', () => {
     expect(formatValue(DAI, '99.9999')).toBe('100.00')
   })
+
+  // Not stables -> 6f
   test('[16] 1.000000000000000000 ETH -> 1.00', () => {
     expect(formatValue(DAI, '1.000000000000000000')).toBe('1.00')
   })
@@ -97,9 +100,13 @@ describe('formatValue', () => {
   test('[31] 0.99999999 ETH -> 1.00', () => {
     expect(formatValue(ETH, '0.99999999')).toBe('1.00')
   })
+
+  // Fiat -> 2f
   test('[32] 12.3456 USD -> 12.35', () => {
     expect(formatValue(CURRENCY_USD, '12.3456')).toBe('12.35')
   })
+
+  // Fiat, 0.00... -> 6f | (?) Fiat, < 0.004(9)
   test('[33] 0.004 USD -> 0.004', () => {
     expect(formatValue(CURRENCY_USD, '0.004')).toBe('0.004')
   })
@@ -121,34 +128,68 @@ describe('formatValue', () => {
   test('[39] 0.0012345 USD -> 0.001235', () => {
     expect(formatValue(CURRENCY_USD, '0.0012345')).toBe('0.001235')
   })
-  test('[40] 10 ETH => 10 ETH', () => {
+
+  // Big values
+  test('[40] 10 ETH => 10.00 ETH', () => {
     expect(formatValue(ETH, '10')).toBe('10.00')
   })
   test('[41] 10.1234567890 ETH -> 10.12 ETH', () => {
     expect(formatValue(ETH, '10.1234567890')).toBe('10.12')
   })
-  test('[42] 10 DAI -> 10 DAI', () => {
+  test('[42] 10 DAI -> 10.00 DAI', () => {
     expect(formatValue(DAI, '10')).toBe('10.00')
   })
   test('[43] 10.1234567890 DAI -> 10.12 DAI', () => {
     expect(formatValue(DAI, '10.1234567890')).toBe('10.12')
   })
-  test('[44] undefined ETH -> \'\'', () => {
+
+  // Smaller-than-min values
+  test('[44] 0.0000000001 ETH -> 0.000001', () => {
+    expect(formatValue(ETH, '0.0000000001')).toBe('0.000001')
+  })
+  test('[45] 0.0000000001 USD -> 0.000001', () => {
+    expect(formatValue(CURRENCY_USD, '0.0000000001')).toBe('0.000001')
+  })
+
+  // Special cases
+  test('[46] undefined ETH -> \'\'', () => {
     expect(formatValue(ETH, undefined)).toBe('')
   })
-  test('[45] Infinity ETH -> ∞', () => {
+  test('[47] Infinity ETH -> ∞', () => {
     expect(formatValue(ETH, 1 / 0)).toBe('∞')
   })
-  test('[46] -Infinity ETH -> -∞', () => {
+  test('[48] -Infinity ETH -> -∞', () => {
     expect(formatValue(ETH, -1 / 0)).toBe('-∞')
   })
-  test('[47] NaN -> \'\'', () => {
+  test('[49] NaN -> \'\'', () => {
     expect(formatValue(ETH, NaN)).toBe('')
   })
-  test('[48] null -> \'\'', () => {
+  test('[50] null -> \'\'', () => {
     expect(formatValue(ETH, null)).toBe('')
   })
-  test('[49] 0 -> 0', () => {
+  test('[51] 0 -> 0', () => {
     expect(formatValue(ETH, 0)).toBe('0')
   })
 })
+
+/*
+### Fiat todo:
+```
+$0.001 -> ?
+$0.0001 -> ?
+$0.00001 -> ?
+$0.000001 -> ?
+$0.0000001 -> ?
+$0.005 -> ?
+$0.0005 -> ?
+$0.00005 -> ?
+$0.000005 -> ?
+$0.0000005 -> ?
+$0.99 -> ?
+$0.999 -> ?
+$0.9999 -> ?
+$0.99999 -> ?
+$0.999999 -> ?
+$0.9999999 -> ?
+```
+*/

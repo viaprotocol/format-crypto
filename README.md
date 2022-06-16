@@ -1,6 +1,8 @@
 # format-crypto
 
-## Value format testcases
+Removes long numbers in a UI. No more than 6 decimal places.
+
+## Testcases
 ### Stables -> 2f
 ```
        ff
@@ -70,26 +72,6 @@
 [39] 0.0012345 USD -> 0.001235
 ```
 
-### Fiat todo:
-```
-$0.001 -> ?
-$0.0001 -> ?
-$0.00001 -> ?
-$0.000001 -> ?
-$0.0000001 -> ?
-$0.005 -> ?
-$0.0005 -> ?
-$0.00005 -> ?
-$0.000005 -> ?
-$0.0000005 -> ?
-$0.99 -> ?
-$0.999 -> ?
-$0.9999 -> ?
-$0.99999 -> ?
-$0.999999 -> ?
-$0.9999999 -> ?
-```
-
 ### Big values
 ```
 [40] 10 ETH -> 10.00
@@ -98,10 +80,18 @@ $0.9999999 -> ?
 [43] 10.1234567890 DAI -> 10.12
 ```
 
+## Smaller-than-min values -> 6f
+```
+[44] 0.0000000001 ETH -> 0.000001
+[45] 0.0000000001 USD -> 0.000001
+```
+
 ### Special cases
 ```
-[44] undefined ETH -> ''
-[45] Infinity ETH -> ∞
-[46] -Infinity ETH -> -∞
-[47] NaN -> ''
+[46] undefined ETH -> ''
+[47] Infinity ETH -> ∞
+[48] -Infinity ETH -> -∞
+[49] NaN -> ''
+[50] null -> ''
+[51] 0 -> '0'
 ```
